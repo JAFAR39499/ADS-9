@@ -10,18 +10,19 @@ PMTree::PMTree(const std::vector<char>& elements) {
     if (elements.empty()) return;
     
     root = std::make_shared<TreeNode>('\0');
-    buildTree(root, elements);
+    std::vector<char> sorted_elements = elements;
+    std::sort(sorted_elements.begin(), sorted_elements.end());
+    buildTree(root, sorted_elements);
 }
 
-void PMTree::buildTree(std::shared_ptr<TreeNode> node, const std::vector<char>& elements) {
-    for (char elem : elements) {
+void PMTree::buildTree(std::shared_ptr<TreeNode> node, std::vector<char> elements) {
+    for (size_t i = 0; i < elements.size(); ++i) {
+        char elem = elements[i];
         auto child = std::make_shared<TreeNode>(elem);
         node->children.push_back(child);
         
-        std::vector<char> remaining;
-        for (char e : elements) {
-            if (e != elem) remaining.push_back(e);
-        }
+        std::vector<char> remaining = elements;
+        remaining.erase(remaining.begin() + i);
         
         if (!remaining.empty()) {
             buildTree(child, remaining);
@@ -55,10 +56,6 @@ void PMTree::getAllPermsHelper(std::shared_ptr<TreeNode> node, std::vector<char>
     current.pop_back();
 }
 
-int PMTree::factorial(int n) const {
-    return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
-}
-
 std::vector<char> PMTree::getPerm1(int num) const {
     std::vector<char> result;
     if (num < 1 || !root) return result;
@@ -66,7 +63,12 @@ std::vector<char> PMTree::getPerm1(int num) const {
     int remaining = num - 1;
     for (const auto& child : root->children) {
         if (remaining < 0) break;
+        size_t prev_size = result.size();
         getPermByNumHelper(child, remaining, result);
+        if (result.size() == prev_size) {
+            result.clear();
+            break;
+        }
     }
     
     return result;
@@ -83,24 +85,13 @@ void PMTree::getPermByNumHelper(std::shared_ptr<TreeNode> node, int& remaining,
         for (const auto& child : node->children) {
             if (remaining < 0) break;
             getPermByNumHelper(child, remaining, result);
+            if (remaining < 0) break;
         }
     }
     
     if (remaining >= 0) {
         result.pop_back();
     }
-}
-
-int PMTree::countPermutations(std::shared_ptr<TreeNode> node) const {
-    if (node->children.empty()) {
-        return 1;
-    }
-    
-    int count = 0;
-    for (const auto& child : node->children) {
-        count += countPermutations(child);
-    }
-    return count;
 }
 
 std::vector<char> PMTree::getPerm2(int num) const {
@@ -126,11 +117,13 @@ bool PMTree::getPermByNumFastHelper(std::shared_ptr<TreeNode> node, int remainin
             return true;
         }
         total++;
-    } else {
-        for (const auto& child : node->children) {
-            if (getPermByNumFastHelper(child, remaining, result, total)) {
-                return true;
-            }
+        result.pop_back();
+        return false;
+    }
+    
+    for (const auto& child : node->children) {
+        if (getPermByNumFastHelper(child, remaining, result, total)) {
+            return true;
         }
     }
     
