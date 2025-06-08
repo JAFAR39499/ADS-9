@@ -5,7 +5,7 @@
 
 int main() {
     std::vector<char> input1 = {'1', '3', '5', '7'};
-    PermutationTree tree1(input1);
+    PMTree tree1(input1);
 
     std::vector<char> result1 = getPerm1(tree1, 1);
     std::vector<char> result2 = getPerm2(tree1, 1);
@@ -23,7 +23,7 @@ int main() {
     std::cout << std::endl;
 
     std::vector<char> input2 = {'1', '5', '7', '5'};
-    PermutationTree tree2(input2);
+    PMTree tree2(input2);
 
     std::vector<char> result3 = getPerm1(tree2, 2);
     std::vector<char> result4 = getPerm2(tree2, 2);
