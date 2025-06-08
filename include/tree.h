@@ -1,9 +1,9 @@
-// Copyright 2022 NNTU-CS
 #ifndef INCLUDE_TREE_H_
 #define INCLUDE_TREE_H_
 
 #include <vector>
 #include <memory>
+#include <algorithm>
 
 struct TreeNode {
     char value;
@@ -14,15 +14,13 @@ struct TreeNode {
 class PMTree {
  private:
     std::shared_ptr<TreeNode> root;
-    void buildTree(std::shared_ptr<TreeNode> node, const std::vector<char>& elements);
+    void buildTree(std::shared_ptr<TreeNode> node, std::vector<char> elements);
     void getAllPermsHelper(std::shared_ptr<TreeNode> node, std::vector<char>& current,
                          std::vector<std::vector<char>>& result) const;
     void getPermByNumHelper(std::shared_ptr<TreeNode> node, int& remaining, 
                           std::vector<char>& result) const;
     bool getPermByNumFastHelper(std::shared_ptr<TreeNode> node, int remaining,
                               std::vector<char>& result, int& total) const;
-    int factorial(int n) const;
-    int countPermutations(std::shared_ptr<TreeNode> node) const;
 
  public:
     explicit PMTree(const std::vector<char>& elements);
