@@ -5,33 +5,26 @@
 #include <vector>
 #include <memory>
 
-struct TreeNode {
-    char value;
-    std::vector<std::shared_ptr<TreeNode>> children;
-    TreeNode(char v) : value(v) {}
-};
-
-class PMTree {
+class PermutationTree {
  private:
-    std::shared_ptr<TreeNode> root;
-    void buildTree(std::shared_ptr<TreeNode> node, const std::vector<char>& elements);
-    void getAllPermsHelper(std::shared_ptr<TreeNode> node, std::vector<char>& current,
-                         std::vector<std::vector<char>>& result) const;
-    void getPermHelper1(std::shared_ptr<TreeNode> node, std::vector<char>& current,
-                      int& target, int& currentNum, std::vector<char>& result) const;
-    bool getPermHelper2(std::shared_ptr<TreeNode> node, std::vector<char>& current,
-                      int& remaining, std::vector<char>& result) const;
-    int factorial(int n) const;
+    struct Node {
+        char value;
+        std::vector<std::unique_ptr<Node>> children;
+        explicit Node(char v) : value(v) {}
+    };
+
+    std::unique_ptr<Node> root;
+    void buildTree(Node* parent, const std::vector<char>& elements);
+    void collectPermutations(Node* node, std::vector<char>& current,
+                           std::vector<std::vector<char>>& result) const;
+    int countPermutations(Node* node) const;
+    bool findPermutation(Node* node, int remaining, std::vector<char>& path) const;
 
  public:
-    explicit PMTree(const std::vector<char>& elements);
-    std::vector<std::vector<char>> getAllPerms() const;
-    std::vector<char> getPerm1(int num) const;
-    std::vector<char> getPerm2(int num) const;
+    explicit PermutationTree(const std::vector<char>& elements);
+    std::vector<std::vector<char>> getAllPermutations() const;
+    std::vector<char> getPermutationByIndexSlow(int index) const;
+    std::vector<char> getPermutationByIndexFast(int index) const;
 };
-
-std::vector<std::vector<char>> getAllPerms(const PMTree& tree);
-std::vector<char> getPerm1(const PMTree& tree, int num);
-std::vector<char> getPerm2(const PMTree& tree, int num);
 
 #endif  // INCLUDE_TREE_H_
