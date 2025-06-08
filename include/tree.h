@@ -5,26 +5,28 @@
 #include <vector>
 #include <memory>
 
-class PermutationTree {
+class PMTree {
  private:
-    struct Node {
-        char value;
-        std::vector<std::unique_ptr<Node>> children;
-        explicit Node(char v) : value(v) {}
+    struct TreeNode {
+        char val;
+        std::vector<std::unique_ptr<TreeNode>> next;
+        explicit TreeNode(char v) : val(v) {}
     };
-
-    std::unique_ptr<Node> root;
-    void buildTree(Node* parent, const std::vector<char>& elements);
-    void collectPermutations(Node* node, std::vector<char>& current,
-                           std::vector<std::vector<char>>& result) const;
-    int countPermutations(Node* node) const;
-    bool findPermutation(Node* node, int remaining, std::vector<char>& path) const;
+    
+    std::unique_ptr<TreeNode> head;
+    void construct(TreeNode* node, const std::vector<char>& elems);
+    void gatherAll(TreeNode* node, std::vector<char>& path,
+                 std::vector<std::vector<char>>& storage) const;
+    int calcCount(TreeNode* node) const;
+    bool locatePerm(TreeNode* node, int target, std::vector<char>& result) const;
 
  public:
-    explicit PermutationTree(const std::vector<char>& elements);
-    std::vector<std::vector<char>> getAllPermutations() const;
-    std::vector<char> getPermutationByIndexSlow(int index) const;
-    std::vector<char> getPermutationByIndexFast(int index) const;
+    explicit PMTree(std::vector<char> input);
+    ~PMTree() = default;
 };
+
+std::vector<std::vector<char>> getAllPerms(PMTree& tree);
+std::vector<char> getPerm1(PMTree& tree, int num);
+std::vector<char> getPerm2(PMTree& tree, int num);
 
 #endif  // INCLUDE_TREE_H_
