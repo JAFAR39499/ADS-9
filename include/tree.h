@@ -4,16 +4,16 @@
 #include <vector>
 #include <string>
 
-class PermutationTree {
+class PMTree {
  public:
-    explicit PermutationTree(std::vector<char> elements);
-    ~PermutationTree();
+    explicit PMTree(std::vector<char> elements);
+    ~PMTree();
     char nodeValue;
-    std::vector<PermutationTree*> branches;
+    std::vector<PMTree*> branches;
 };
 
-std::vector<std::vector<char>> getAllPerms(PermutationTree& tree);
-std::vector<char> getPerm1(PermutationTree& tree, int index);
-std::vector<char> getPerm2(PermutationTree& tree, int index);
+std::vector<std::vector<char>> getAllPerms(PMTree& tree);
+std::vector<char> getPerm1(PMTree& tree, int index);
+std::vector<char> getPerm2(PMTree& tree, int index);
 
 #endif  // INCLUDE_TREE_H_
